@@ -1,0 +1,171 @@
+/* 全体のスタイル */
+.stApp {
+    font-family: 'Helvetica Neue', 'Arial', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+}
+
+/* ヘッダーのスタイル */
+.st-emotion-cache-1629p8f h1 {
+    color: #1f77b4;
+    padding: 1rem 0;
+    border-bottom: 2px solid #1f77b4;
+    margin-bottom: 2rem;
+}
+
+/* サブヘッダーのスタイル */
+.st-emotion-cache-1629p8f h2 {
+    color: #2c3e50;
+    margin: 1.5rem 0;
+}
+
+/* 入力フォームのスタイル */
+.stTextInput > div > div > input {
+    border-radius: 5px;
+    padding: 0.25rem;
+    margin: 0.1rem 0;
+    min-height: 1.5rem;
+    -webkit-appearance: none;  /* セレクトボックスの表示を無効化 */
+    -moz-appearance: none;  /* Firefox用 */
+    appearance: none;  /* 標準のセレクトボックス表示を無効化 */
+}
+
+/* Chrome用の自動補完背景色を無効化 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
+    -webkit-text-fill-color: inherit !important;
+}
+
+.stSelectbox > div > div > select {
+    border-radius: 5px;
+}
+
+/* エラーメッセージのスタイル */
+.stAlert {
+    padding: 0.25rem;
+    border-radius: 3px;
+    margin: 0.1rem 0;
+    height: 30px;
+    overflow: hidden;
+}
+
+/* エラーメッセージのテキストスタイル */
+.stAlert > div > div {
+    font-size: 0.35rem !important;
+    line-height: 1.2;
+}
+
+.st-emotion-cache-9hz7ad {
+    font-size: inherit !important;
+}
+
+/* カラムのスタイル */
+[data-testid="column"] {
+    padding: 0.1rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* テキスト要素のスタイル */
+[data-testid="stText"] {
+    margin: 0 !important;
+    padding: 0.25rem 0 !important;
+}
+
+/* ラジオボタンのスタイル */
+.stRadio > div {
+    padding: 0.5rem;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+}
+
+/* ラジオボタンのラベル */
+.stRadio label {
+    padding: 0.5rem 1rem;
+    margin: 0.25rem 0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* ラジオボタンのホバー効果 */
+.stRadio label:hover {
+    background-color: #e9ecef;
+}
+
+/* 選択されたラジオボタン */
+.stRadio [data-baseweb="radio"] input:checked + div {
+    background-color: #1f77b4;
+    border-color: #1f77b4;
+}
+
+/* 選択されたラジオボタンのラベル */
+.stRadio [data-baseweb="radio"] input:checked + div + div {
+    color: #1f77b4;
+    font-weight: 600;
+}
+
+/* ボタンのスタイル */
+.stButton > button {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #1f77b4;
+    color: white;
+}
+
+.stButton > button:hover {
+    background-color: #1a6698;
+}
+
+/* データフレームのスタイル */
+.stDataFrame {
+    border: 1px solid #e1e4e8;
+    border-radius: 5px;
+}
+
+/* メトリクスのスタイル */
+.stMetric {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* タブのスタイル */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 2rem;
+}
+
+.stTabs [data-baseweb="tab"] {
+    height: 3rem;
+}
+
+/* 合計行のスタイル */
+[data-testid="stHorizontalBlock"] + hr + [data-testid="stHorizontalBlock"] [data-testid="stText"] {
+    font-weight: bold;
+    color: #1f77b4;
+    border-top: 1px solid #e1e4e8;
+    padding-top: 0.5rem !important;
+}
+
+/* タイトル周りのスタイル */
+.title-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 2px solid #1f77b4;
+    margin-bottom: 2rem;
+}
+
+.title-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.title-container h1 {
+    color: #1f77b4;
+    margin: 0;
+}
