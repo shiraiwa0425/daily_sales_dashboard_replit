@@ -378,17 +378,15 @@ def main():
         # 保存ボタン（フォーム内）
         with st.form("sales_form"):
             submitted = st.form_submit_button("保存", use_container_width=True)
-
-            if submitted and not st.session_state.form_submitted:
-                st.session_state.form_submitted = True
-
+            if submitted:
                 if has_error:
                     st.error("入力エラーがあります。修正してください。")
-                    st.session_state.form_submitted = False
                 else:
                     save_success = save_sales_data(selected_year, selected_month, st.session_state.sales_data, last_day)
                     if save_success:
                         st.success("売上データを保存しました！")
+                        st.session_state.form_submitted = False
+
                         # 日別売上表に画面遷移
                         st.rerun()
                     else:
