@@ -199,7 +199,7 @@ def main():
     # サイドバー
     st.sidebar.header("メニュー")
     current_page = st.sidebar.radio(
-        label="",  # ラベルを空文字列に設定
+        label="以下選択",
         options=["売上入力", "日別売上表", "月別売上表", "売上分析", "データ管理"]
     )
 
