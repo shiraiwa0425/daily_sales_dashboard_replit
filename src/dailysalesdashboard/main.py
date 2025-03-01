@@ -15,10 +15,12 @@ try:
 except ImportError:
     # utils.pyがない場合のフォールバック関数
     def load_data():
-        """データを読み込む関数"""
+        """データを読み込み、標準化する関数"""
         try:
             if os.path.exists("sales_data.csv"):
-                return pd.read_csv("sales_data.csv")
+                df = pd.read_csv("sales_data.csv")
+                # データの標準化を適用
+                return standardize_data(df)
             else:
                 return pd.DataFrame(columns=["日付", "時間帯", "支払方法", "売上金額", "備考"])
         except Exception as e:
@@ -37,6 +39,28 @@ except ImportError:
     def validate_sales_data(df):
         """売上データの検証を行う関数"""
         return True
+
+# 既存データを標準化する関数を追加
+def standardize_data(df):
+    """CSVデータを標準化して一貫性を確保する"""
+    # 必須カラムの確認と追加
+    required_columns = ["日付", "時間帯", "支払方法", "売上金額", "備考"]
+    for col in required_columns:
+        if col not in df.columns:
+            df[col] = ""
+    
+    # 時間帯の標準化（昼営業/夜営業以外の値を修正）
+    valid_times = ['昼営業', '夜営業']
+    df.loc[~df['時間帯'].isin(valid_times), '時間帯'] = '昼営業'  # デフォルト値
+    
+    # 支払方法の標準化
+    # 昼営業のデータは'lunch'、夜営業のデータは'dinner'をデフォルト値とする
+    df.loc[(df['支払方法'].isnull() | df['支払方法'] == '') & 
+           (df['時間帯'] == '昼営業'), '支払方法'] = 'lunch'
+    df.loc[(df['支払方法'].isnull() | df['支払方法'] == '') & 
+           (df['時間帯'] == '夜営業'), '支払方法'] = 'dinner'
+    
+    return df
 
 # 入力値の検証用関数
 def validate_input(value, key):
@@ -171,30 +195,14 @@ def main():
         </svg>
         """
         b64 = base64.b64encode(svg_content.encode('utf-8')).decode('utf-8')
-        svg_url = f'data:image/svg+xml;base64,{b64}'
 
     # タイトル（SVGを使用）
-    st.markdown(
-        f"""
-        <div class="title-container">
-            <img src="{svg_url}" class="title-icon" alt="飲食店アイコン">
-            <h1>飲食店売上管理システム</h1>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # セッション状態の初期化
-    if 'data' not in st.session_state:
-        st.session_state.data = load_data()
-    if 'previous_year_month' not in st.session_state:
-        st.session_state.previous_year_month = None
-    if 'sales_data' not in st.session_state:
-        st.session_state.sales_data = {}
-    if 'form_submitted' not in st.session_state:
-        st.session_state.form_submitted = False
-    if 'previous_value' not in st.session_state:
-        st.session_state.previous_value = {}
+    st.markdown(f"""
+    <div class="title-container">
+        <img src="{svg_url}" class="title-icon" alt="飲食店アイコン">
+        <h1>飲食店売上管理システム</h1>
+    </div>
+    """, unsafe_allow_html=True)
 
     # サイドバー
     st.sidebar.header("メニュー")
@@ -386,7 +394,6 @@ def main():
                     if save_success:
                         st.success("売上データを保存しました！")
                         st.session_state.form_submitted = False
-
                         # 日別売上表に画面遷移
                         st.rerun()
                     else:
@@ -450,7 +457,6 @@ def main():
                     '夜営業': f"¥{monthly_summary['夜営業'].sum():,.0f}",
                     '総売上': f"¥{monthly_summary['総売上'].sum():,.0f}"
                 }])
-
                 formatted_summary = pd.concat([formatted_summary, total_row])
 
                 # サマリー指標の表示
@@ -611,6 +617,7 @@ def main():
                     st.metric("月間夜営業売上", f"¥{dinner_total:,.0f}")
                 with col3:
                     st.metric("月間総売上", f"¥{total:,.0f}")
+
                 try:
                     # 日付ごとのデータを準備
                     daily_data = month_data.groupby(['日付', '時間帯'])['売上金額'].sum().reset_index()
@@ -646,7 +653,6 @@ def main():
                         '夜営業': f"¥{daily_summary['夜営業'].sum():,.0f}",
                         '総売上': f"¥{daily_summary['総売上'].sum():,.0f}"
                     }])
-
                     formatted_summary = pd.concat([formatted_summary, total_row])
 
                     # 表の表示
@@ -657,7 +663,6 @@ def main():
                     )
                 except Exception as e:
                     st.error(f"データの集計中にエラーが発生しました: {str(e)}")
-                    st.info("選択期間内のデータを確認してください。")
             else:
                 st.info(f"{selected_year}年{selected_month}月のデータはありません。")
         else:
@@ -762,7 +767,7 @@ def main():
                     mime="text/csv",
                     use_container_width=True
                 )
-                
+
                 # データ削除機能
                 st.divider()
                 st.subheader("データ管理操作")
@@ -783,6 +788,19 @@ def main():
                             st.rerun()
                         else:
                             st.error("データ削除中にエラーが発生しました。")
+                
+                with st.expander("データ構造を修復"):
+                    st.info("データの構造に問題がある場合に修復を実行します。")
+                    if st.button("データ修復を実行"):
+                        # データを標準化
+                        st.session_state.data = standardize_data(st.session_state.data)
+                        # 修復したデータを保存
+                        save_success = save_data(st.session_state.data)
+                        if save_success:
+                            st.success("データ構造の修復が完了しました。")
+                            st.rerun()
+                        else:
+                            st.error("データ修復中にエラーが発生しました。")
             else:
                 st.info("選択された期間のデータがありません。")
         else:
