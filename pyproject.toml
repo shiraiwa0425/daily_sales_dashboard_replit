@@ -1,11 +1,20 @@
 [project]
-name = "repl-nix-workspace"
+name = "dailysalesdashboard"  # プロジェクト名を変更
 version = "0.1.0"
-description = "Add your description here"
+description = "Daily Sales Dashboard Application"
 requires-python = ">=3.11"
 dependencies = [
     "pandas>=2.2.3",
     "plotly>=6.0.0",
     "streamlit>=1.42.2",
     "twilio>=9.4.6",
+    "watchdog>=6.0.0",
 ]
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}  # srcディレクトリを指定
+packages = ["dailysalesdashboard"]  # パッケージを明示的に指定
