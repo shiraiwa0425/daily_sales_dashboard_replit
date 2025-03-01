@@ -158,6 +158,11 @@ def main():
         layout="wide"
     )
 
+    # セッション状態の初期化チェック
+    if 'previous_year_month' not in st.session_state:
+        st.session_state.previous_year_month = ""
+
+
     # CSSスタイルの追加（ファイルがない場合はインラインで定義）
     try:
         with open('styles.css') as f:
@@ -195,6 +200,8 @@ def main():
         </svg>
         """
         b64 = base64.b64encode(svg_content.encode('utf-8')).decode('utf-8')
+        svg_url = f'data:image/svg+xml;base64,{b64}'
+
 
     # タイトル（SVGを使用）
     st.markdown(f"""
@@ -805,6 +812,4 @@ def main():
                 st.info("選択された期間のデータがありません。")
         else:
             st.info("登録されているデータがありません。")
-
-if __name__ == "__main__":
-    main()
+    
